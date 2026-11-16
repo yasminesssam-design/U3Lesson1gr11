@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>المحترف | الدرس 3-1 البنية العامة لتطبيقات الويب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1d3a;--card:#13294f;--ink:#f4f8ff;--mut:#a9c0e6;--teal:#19d3c5;--sun:#ffc83d;--red:#ff5d73;--grn:#2ee59d}
+*{box-sizing:border-box}
+html{font-size:20px}
+body{margin:0;font-family:Cairo,Tahoma,Arial,sans-serif;color:var(--ink);background:linear-gradient(120deg,#0b1d3a,#1b2f7a,#0a5a6e,#0b1d3a);background-size:400% 400%;animation:bg 18s ease infinite;min-height:100vh;line-height:1.7;overflow-x:hidden}
+@keyframes bg{50%{background-position:100% 50%}}
+.fl{position:fixed;bottom:-60px;font-weight:900;color:#fff;opacity:.09;animation:up linear infinite;pointer-events:none;z-index:0}
+@keyframes up{to{transform:translateY(-120vh) rotate(40deg)}}
+main{position:relative;z-index:1;max-width:960px;margin:auto;padding:16px}
+.ar{display:block;direction:rtl;text-align:right;font-size:1.3rem;font-weight:700}
+.en{display:block;direction:ltr;text-align:left;font-size:1.55rem;line-height:1.6;color:#d6e4ff;font-weight:600}
+.logo{display:flex;align-items:center;gap:12px;justify-content:center;margin:8px 0}
+.logo b{font-size:2.2rem;font-weight:900;letter-spacing:1px}
+.logo i{font-style:normal;color:var(--sun)}
+.hero{text-align:center;padding:20px 8px}
+.hero h1{font-size:2.3rem;margin:.2em 0;color:var(--sun);font-weight:900}
+.hero h2{font-size:1.5rem;margin:0;color:var(--teal)}
+.card{background:var(--card);border:2px solid #2b4a86;border-radius:22px;padding:18px 22px;margin:18px 0;box-shadow:0 10px 30px #0006}
+.card h3{margin:0 0 8px;font-size:1.7rem;color:var(--sun)}
+.card h3 span{display:block}
+.key{border-color:var(--teal);background:#0e3a55}
+.tip{border-color:var(--sun);background:#3a3410}
+table{width:100%;border-collapse:collapse;margin:10px 0}
+th,td{border:2px solid #2b4a86;padding:10px;vertical-align:top}
+th{background:#1d3d7a;color:var(--sun)}
+td:first-child{font-weight:900;color:var(--teal)}
+.wrap{overflow-x:auto}
+.btn{font-family:inherit;font-size:1.35rem;font-weight:900;border:0;border-radius:50px;padding:14px 30px;cursor:pointer;color:#06142b;background:linear-gradient(90deg,var(--sun),#ff9f43);box-shadow:0 6px 0 #b86d12;transition:transform .15s}
+.btn:hover{transform:translateY(-3px)}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #b86d12}
+.btn.t{background:linear-gradient(90deg,var(--teal),#3aa0ff);box-shadow:0 6px 0 #0b6f8a}
+.btn.big{font-size:1.7rem;padding:18px 40px}
+.btn:focus-visible,input:focus-visible,.opt:focus-visible{outline:4px solid #fff}
+.center{text-align:center}
+input{font-family:inherit;font-size:1.5rem;padding:14px 20px;border-radius:16px;border:3px solid var(--teal);width:min(100%,460px);text-align:center;background:#fff;color:#06142b}
+.stage{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0}
+.act{flex:1 1 150px;text-align:center;background:#1d3d7a;border:3px solid #2b4a86;border-radius:18px;padding:12px;font-weight:900;font-size:1.15rem;transition:.4s}
+.act.on{background:var(--teal);color:#06142b;transform:scale(1.08);box-shadow:0 0 30px var(--teal)}
+.stepbox{min-height:110px}
+#gate{position:fixed;inset:0;z-index:50;background:#050f22ee;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+#gate .card{max-width:620px;text-align:center}
+#qz{position:fixed;inset:0;z-index:60;background:#050f22f2;overflow:auto;display:none;padding:12px}
+#qz .in{max-width:900px;margin:auto}
+.bar{height:16px;background:#1d3d7a;border-radius:20px;overflow:hidden;margin:8px 0}
+.bar div{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--sun));transition:width .4s}
+.q{background:var(--card);border:3px solid #2b4a86;border-radius:22px;padding:20px}
+.q .ar{font-size:1.6rem}.q .en{font-size:1.8rem}
+.opt{display:block;width:100%;margin:10px 0;border:3px solid #2b4a86;background:#1d3d7a;color:var(--ink);border-radius:16px;padding:12px 16px;cursor:pointer;font-family:inherit;transition:.2s}
+.opt:hover:not(:disabled){border-color:var(--sun);transform:scale(1.02)}
+.opt.ok{background:var(--grn);color:#052;border-color:#fff;animation:pop .5s}
+.opt.no{background:var(--red);color:#fff;border-color:#fff;animation:shake .5s}
+.opt.ok .en,.opt.no .en{color:inherit}
+@keyframes pop{50%{transform:scale(1.07)}}
+@keyframes shake{20%,60%{transform:translateX(-12px)}40%,80%{transform:translateX(12px)}}
+.flash{animation:fr .6s}
+@keyframes fr{0%{box-shadow:0 0 0 0 var(--red)}50%{box-shadow:inset 0 0 120px 20px var(--red)}}
+.flashg{animation:fg .6s}
+@keyframes fg{50%{box-shadow:inset 0 0 120px 20px var(--grn)}}
+.cf{position:fixed;top:-20px;width:14px;height:14px;z-index:99;animation:fall 1.8s ease-in forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.score{font-size:4rem;font-weight:900;color:var(--sun);text-align:center}
+.xs{position:absolute;top:10px;left:10px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+@media(max-width:600px){html{font-size:16px}}
+#es{position:fixed;inset:0;z-index:60;background:#050f22f6;overflow:auto;display:none;padding:12px}#es .in{max-width:940px;margin:auto}.gh{color:var(--sun);font-size:1.6rem;margin:26px 0 8px}.ed{background:var(--card);border:3px solid #2b4a86;border-radius:20px;margin:12px 0;padding:6px 18px}.ed[open]{border-color:var(--teal)}.ed summary{cursor:pointer;padding:10px 0;list-style:none}.ed summary .ar{font-size:1.4rem}.ed summary .en{font-size:1.5rem}.ans{border-top:2px dashed var(--teal);padding:10px 0 14px}.ans .ar{font-size:1.4rem}.ans .en{font-size:1.5rem}
+</style>
+</head>
+<body>
+<div id="fl"></div>
+
+<div id="gate"><div class="card">
+ <div class="logo"><svg width="54" height="54" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffc83d"/><path d="M14 46V20l18 18 18-18v26" fill="none" stroke="#0b1d3a" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/></svg><b>MOHTARF <i>محترف</i></b></div>
+ <span class="ar">أهلًا بك! اكتب اسمك أولًا لتبدأ الدرس</span>
+ <span class="en" style="text-align:center">Welcome! Enter your name first to start</span>
+ <p><input id="nm" placeholder="الاسم | Name" autocomplete="name"></p>
+ <button class="btn big" onclick="go()">ابدأ | Start</button>
+</div></div>
+
+<main>
+ <div class="logo"><svg width="54" height="54" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffc83d"/><path d="M14 46V20l18 18 18-18v26" fill="none" stroke="#0b1d3a" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/></svg><b>MOHTARF <i>محترف</i></b></div>
+ <div class="hero">
+  <h2>الصف الثاني الثانوي – الوحدة الثالثة | Grade 11 – Unit 3</h2>
+  <h1>الدرس 3-1: البنية العامة لتطبيقات الويب</h1>
+  <h1 style="direction:ltr;font-size:2.1rem">Lesson 3-1: The Overall Structure of Web Applications</h1>
+  <p class="center"><button class="btn big" onclick="openE()">الأسئلة المقالية | Essay Questions</button></p><p id="hi" class="ar center" style="text-align:center"></p>
+ </div>
+ <div id="les"></div>
+ <div class="card center">
+  <h3><span>جاهز للاختبار النهائي؟</span><span style="direction:ltr">Ready for the final exam?</span></h3>
+  <button class="btn big" style="margin-inline:8px" onclick="openE()">الأسئلة المقالية | Essay Questions</button> <button class="btn t big" onclick="runQ(ALL,'final',true)">الاختبار النهائي | Final Exam</button>
+ </div>
+</main>
+
+<div id="es"><div class="in"><div class="center"><button class="btn t" onclick="closeE()">✕ إغلاق | Close</button></div><h1 class="center" style="color:var(--sun)">الأسئلة المقالية | Essay Questions<br><small style="font-size:1.1rem;color:var(--mut)">اضغط على السؤال لإظهار الإجابة النموذجية | Click a question to show the model answer</small></h1><div id="eb"></div></div></div>
+<div id="qz"><div class="in"><div id="qb"></div></div></div>
+
+<script>
+var $=function(s){return document.querySelector(s)};
+function b(s){var p=s.split('|');return '<span class="ar">'+p[0]+'</span><span class="en">'+p[1]+'</span>'}
+var name='';
+function go(){var v=$('#nm').value.trim();if(!v){$('#nm').focus();return}name=v;$('#gate').style.display='none';$('#hi').innerHTML='أهلًا يا '+v+' | Hello, '+v+'!';snd(1)}
+/* background */
+(function(){var w=['</>','01','HTML','DB','{ }','www','API','10'],h='';for(var i=0;i<20;i++)h+='<span class="fl" style="left:'+(i*5)+'%;font-size:'+(20+i%5*14)+'px;animation-duration:'+(14+i%7*4)+'s;animation-delay:-'+(i*2)+'s">'+w[i%8]+'</span>';$('#fl').innerHTML=h})();
+/* sound */
+var AC;function tone(f,t,d,ty){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain();o.type=ty||'sine';o.frequency.value=f;g.gain.setValueAtTime(.25,AC.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+t+d);o.connect(g);g.connect(AC.destination);o.start(AC.currentTime+t);o.stop(AC.currentTime+t+d)}catch(e){}}
+function snd(ok){if(ok){tone(523,0,.15);tone(659,.12,.15);tone(784,.24,.3)}else{tone(200,0,.3,'sawtooth');tone(140,.2,.4,'sawtooth')}}
+function conf(){var c=['#ffc83d','#19d3c5','#ff5d73','#2ee59d','#fff'];for(var i=0;i<50;i++){var d=document.createElement('div');d.className='cf';d.style.left=Math.random()*100+'vw';d.style.background=c[i%5];d.style.animationDelay=Math.random()*.4+'s';document.body.appendChild(d);setTimeout(function(x){x.remove()},2400,d)}}
+/* lesson content */
+var TB=function(h,rows){return '<div class="wrap"><table><tr>'+h.map(function(x){return '<th>'+b(x)+'</th>'}).join('')+'</tr>'+rows.map(function(r){return '<tr>'+r.map(function(x){return '<td>'+b(x)+'</td>'}).join('')+'</tr>'}).join('')+'</table></div>'};
+var TIERS=['الواجهة الأمامية|Frontend','الواجهة الخلفية|Backend','قاعدة البيانات|Database'];
+var ACT=['المستخدم|User','الواجهة الأمامية|Frontend','الواجهة الخلفية|Backend','قاعدة البيانات|Database'];
+var STEPS=[[1,'١– تستقبل الواجهة الأمامية كلمات البحث التي أدخلها المستخدم.|1. The frontend receives the search keywords entered by the user.'],[2,'٢– ترسل الواجهة الأمامية كلمات البحث إلى الواجهة الخلفية.|2. The frontend sends the search keywords to the backend.'],[3,'٣– تطلب الواجهة الخلفية من طبقة البيانات المنتجات التي تطابق عبارة البحث.|3. The backend searches the database for products that match the criteria.'],[2,'٤– تعيد طبقة البيانات النتائج المطلوبة إلى الواجهة الخلفية.|4. The database returns the data of matching products to the backend.'],[1,'٥– تجهز الواجهة الخلفية النتائج لإرسالها إلى الواجهة الأمامية.|5. The backend organizes the search results and returns them to the frontend.'],[0,'٦– تعرض الواجهة الأمامية نتائج البحث على شاشة المستخدم.|6. The frontend displays the search results on the user\'s screen.']];
+var si=-1;
+function step(){si=(si+1)%6;var a=document.querySelectorAll('.act');a.forEach(function(x,i){x.classList.toggle('on',i==STEPS[si][0]+0)});$('#sb').innerHTML=b(STEPS[si][1]);tone(440+si*80,0,.15)}
+var S=[
+{t:'أولًا: ما هو تطبيق الويب؟|1. What is a Web Application?',h:
+ '<p>'+b('عندما تشاهد فيديو، أو تتسوق عبر الإنترنت، أو تستخدم البريد الإلكتروني من خلال المتصفح، فأنت غالبًا تستخدم تطبيق ويب.|Every time you search on YouTube, buy on Amazon, or open Gmail, you are using a web application.')+'</p>'+
+ '<div class="card key"><h3>'+b('تطبيق الويب|Web application')+'</h3>'+b('برنامج يعمل عبر الإنترنت وغالبًا يُستخدم من خلال متصفح الويب مثل Chrome، ولا يحتاج إلى تثبيت برنامج خاص. بعضها يمكن تثبيته على الجهاز فيظهر كتطبيق عادي.|An application used through a web browser. It can be used as long as you have a browser, without needing to install dedicated software.')+b('أمثلة: YouTube, Amazon, Gmail, Google Maps|e.g., YouTube, Amazon, Gmail, Google Maps')+'</div>'+
+ '<div class="card tip">'+b('مثال بسيط: عندما تفتح موقعًا للتسوق وتبحث عن منتج وتضيفه إلى سلة المشتريات، فأنت لا تشاهد صفحة ثابتة فقط بل تستخدم تطبيقًا يتفاعل معك وينفذ أوامر.|Simple example: when you search a shopping site and add a product to the cart, you are not viewing a static page but using an app that responds and carries out commands.')+b('الأشياء التي تراها على الشاشة ليست كل ما يحدث، فخلف الشاشة أجزاء مختلفة تعمل معًا.|What you see on the screen is not everything that happens; behind it, different parts work together.')+'</div>'+
+ '<div class="card">'+b('السؤال الرئيسي: كيف يُبنى تطبيق الويب، وكيف تعمل طبقاته الثلاث معًا للاستجابة لما يفعله المستخدم؟|Guiding question: How is a web application structured, and how do its three tiers work together to respond to what a user does?')+'</div>'},
+{t:'ثانيًا: الطبقات الثلاث لتطبيق الويب|2. The Three Tiers of a Web Application',h:
+ TB(['الطبقة|Tier','الدور|Role','أمثلة|Examples'],[[TIERS[0],'الجزء الذي يراه المستخدم ويتعامل معه في المتصفح. يعرض المحتوى ويستقبل ما يكتبه المستخدم أو يختاره.|The screen component that users see directly. It runs on the browser and accepts user input.','شاشة البحث، صفحات عرض المنتجات، نماذج الإدخال.|Search screen, product listing pages, input forms.'],[TIERS[1],'الجزء الذي يعمل على الخادم. يعالج الطلبات ويطبق قواعد التطبيق.|The server-side processing that users do not see. It processes data and makes decisions.','البحث عن منتجات تطابق معايير البحث، التحقق من تسجيل الدخول.|Searching for products that match search criteria, login authentication.'],[TIERS[2],'طبقة تحفظ البيانات وتوفرها عند الحاجة، وقد تشمل قواعد بيانات أو ملفات.|A system that organizes, stores, and manages data. It retrieves data when needed and records new data.','معلومات المنتجات، معلومات المستخدمين، سجل الطلبات.|Product information, user information, order history.']])+
+ '<div class="card key">'+b('الفكرة الأساسية: ثلاث طبقات تتعاون لتحويل إجراء المستخدم إلى نتيجة: الواجهة الأمامية تعرض وتجمع، الخلفية تقرر وتعالج، وقاعدة البيانات تخزن وتسترجع.|Key Fact: three tiers cooperate to turn a user\'s action into a result. The frontend shows and collects, the backend decides and processes, the database stores and retrieves.')+'</div>'+
+ '<div class="card tip">'+b('توقف وفكر: عندما تكتب في مربع البحث وترى النتائج، أي طبقة جمعت المدخلات، وأي طبقة وجدت الإجابة؟|Pause & Think: when you type in a search box and see results, which tier collected your input, and which tier found the answer?')+'</div>'},
+{t:'ثالثًا: تدفق تعاون الطبقات الثلاث|3. The Flow of How the Three Tiers Cooperate',h:
+ '<p>'+b('مثال: البحث عن منتج في متجر إلكتروني. اضغط الزر لترى الخطوات واحدة واحدة.|Example: searching for a product on an online shopping site. Press the button to see each step.')+'</p><div class="stage">'+ACT.map(function(a){return '<div class="act">'+b(a)+'</div>'}).join('')+'</div><div class="card stepbox" id="sb">'+b('اضغط «الخطوة التالية» لبدء التدفق.|Press "Next step" to start the flow.')+'</div><div class="center"><button class="btn t" onclick="step()">الخطوة التالية | Next step</button></div>'+
+ '<div class="card tip">'+b('أنت ⇐ الواجهة الأمامية ⇐ الواجهة الخلفية ⇐ طبقة البيانات ⇐ إرسال البيانات المطلوبة ⇐ الواجهة الخلفية ⇐ الواجهة الأمامية تعرض النتيجة أمامك.|You ⇒ Frontend ⇒ Backend ⇒ Database ⇒ data sent back ⇒ Backend ⇒ Frontend shows the result to you.')+'</div>'},
+{t:'رابعًا: إعدادات تطبيقات الويب المألوفة|4. Familiar Web Application Configurations',h:
+ '<p>'+b('تُبنى تقريبًا كل خدمة عبر الإنترنت على نفس الطبقات الثلاث، مع أن البنية الفعلية قد تختلف.|All familiar web applications operate on this three-tier architecture, though the actual structure may differ.')+'</p>'+
+ TB(['الخدمة|Service','الواجهة الأمامية (العرض والتفاعل)|Frontend (display and interaction)','الواجهة الخلفية (المعالجة والتحكم)|Backend (processing and control)','قاعدة البيانات (التخزين والإدارة)|Database (storage and management)'],[['موقع مشاركة الفيديو|Video sharing site','عرض شاشات تشغيل الفيديو والبحث؛ استقبال إجراءات المستخدم.|Display of video playback and search screens; reception of user operations.','اختيار الفيديوهات الموصى بها؛ تجميع عدد المشاهدات.|Selection of recommended videos; aggregation of view counts.','تخزين بيانات الفيديو ومعلومات المستخدمين وسجل المشاهدة.|Storage of video data, user information, and viewing history.'],['شبكة التواصل الاجتماعي|SNS','عرض الخط الزمني وشاشات النشر؛ إرسال المحتوى المُدخل.|Display of timelines and post screens; sending of input content.','تحديد الجمهور المستهدف للمنشورات؛ التحكم في الإشعارات الفورية.|Determining the audience for posts; control of push notifications.','تخزين بيانات المنشورات وعلاقات المتابعة والرسائل.|Storage of post data, follow relationships, and messages.'],['موقع تجارة إلكترونية|E-commerce site','عرض قوائم المنتجات وشاشات سلة التسوق؛ استقبال عمليات الطلب.|Display of product listings and cart screens; reception of order operations.','التحقق من المخزون؛ إرسال طلبات الدفع والتعامل مع نتائجها.|Stock checking; execution of payment systems.','تخزين معلومات المنتجات وسجل الطلبات ومعلومات العملاء.|Storage of product information, order history, and customer information.']])+
+ '<div class="card key">'+b('النموذج للتعلم وليس بنية ثابتة لكل تطبيق؛ فقد تختلف البنية وقد لا توجد قاعدة بيانات تقليدية أصلًا.|The model is for learning, not a fixed structure for every app; the structure may differ.')+'</div>'+
+ '<div class="card tip">'+b('سؤال على نمط الامتحان: اشرح كيف تتعاون الطبقات الثلاث عندما ينشر المستخدم صورة على تطبيق تواصل اجتماعي، مع الإشارة إلى دور الواجهة الأمامية والخلفية وقاعدة البيانات.|Exam-style question: Explain how the three tiers cooperate when a user posts a photo on a social media app. Refer to the role of the frontend, backend, and database.')+'</div>'+
+ '<div class="card">'+b('إجابة السؤال الرئيسي: يعمل تطبيق الويب عبر ثلاث طبقات متعاونة، لكل منها دور واضح: عرض، ثم معالجة، ثم تخزين.|Lesson question answered: a web application works through three cooperating tiers, each with a clear role: display, processing, storage.')+'</div>'}
+];
+/* questions: M(ar,en,correct,[[ar,en]...]) ; T(ar,en,true?) */
+function M(a,e,c,o){return{a:a,e:e,c:c,o:o}}
+function T(a,e,v){return{a:a,e:e,c:v?0:1,o:[['صح','True'],['خطأ','False']]}}
+function TI(a,e,c){return{a:a,e:e,c:c,o:TIERS.map(function(x){return x.split('|')})}}
+var Q=[
+[M('ما المثال الذي يمثل تطبيق ويب؟','Which example represents a web application?',3,[['الآلة الحاسبة','Calculator'],['لوحة المفاتيح','Keyboard'],['الطابعة','Printer'],['خدمة البريد الإلكتروني عبر الويب','Web-based email service']]),
+ T('تطبيق الويب هو برنامج يُستخدم عادةً من خلال متصفح الويب.','A web application is a program usually used through a web browser.',1),
+ T('لا يمكن تثبيت أي تطبيق ويب على الجهاز.','No web application can be installed on a device.',0),
+ M('تطبيق الويب هو برنامج يُستخدم عادةً من خلال......','A web application is a program usually used through......',2,[['قاعدة البيانات','Database'],['الخرائط','Maps'],['متصفح الويب','Web browser'],['الواجهة الأمامية','Frontend'],['الواجهة الخلفية','Backend']]),
+ M('من أمثلة تطبيقات الويب خدمات الفيديو والتسوق والبريد و.....','Examples of web applications: video, shopping, email and.....',1,[['قاعدة البيانات','Database'],['الخرائط','Maps'],['متصفح الويب','Web browser'],['الواجهة الأمامية','Frontend'],['الواجهة الخلفية','Backend']])],
+[M('ما الجزء الذي يراه المستخدم ويتفاعل معه في تطبيق الويب؟','Which part does the user see and interact with in a web app?',1,[['قاعدة البيانات','Database'],['الواجهة الأمامية','Frontend'],['الواجهة الخلفية','Backend'],['الخادم','Server']]),
+ M('ما وظيفة الواجهة الخلفية في تطبيق الويب؟','What is the function of the backend?',2,[['تخزين البيانات','Storing data'],['عرض الصور','Displaying images'],['معالجة الطلبات','Processing requests'],['إدخال البيانات','Entering data']]),
+ M('ما الطبقة المسؤولة عن حفظ البيانات وتوفيرها عند الحاجة؟','Which tier is responsible for saving data and providing it when needed?',0,[['قاعدة البيانات','Database'],['الواجهة الأمامية','Frontend'],['المتصفح','Browser'],['الواجهة الخلفية','Backend']]),
+ M('ما الأجزاء الرئيسية الثلاثة في نموذج تطبيق الويب المبسط؟','What are the three main parts of the simplified web app model?',1,[['شاشة وطابعة وماوس','Screen, printer and mouse'],['واجهة أمامية وواجهة خلفية وقاعدة بيانات','Frontend, backend and database'],['متصفح وخادم وماوس','Browser, server and mouse'],['شبكة وكابل وشاشة','Network, cable and screen']]),
+ T('الواجهة الخلفية هي الجزء الذي يعمل على المتصفح.','The backend is the part that runs on the browser.',0)],
+[M('ما أول خطوة في تدفق البحث عن منتج في متجر إلكتروني؟','What is the first step in the flow of searching for a product in an online store?',2,[['تعرض الواجهة النتائج','The frontend displays the results'],['تعيد قاعدة البيانات النتائج','The database returns the results'],['تستقبل الواجهة الأمامية كلمات البحث','The frontend receives the search keywords'],['تطبق الواجهة الخلفية قواعد التطبيق','The backend applies the app rules']]),
+ M('ماذا يحدث بعد أن ترسل الواجهة الأمامية كلمات البحث إلى الواجهة الخلفية؟','What happens after the frontend sends the keywords to the backend?',0,[['تطلب الواجهة الخلفية المنتجات المطابقة من طبقة البيانات','The backend requests matching products from the database'],['تعرض النتائج مباشرةً','It displays the results directly'],['تحذف قاعدة البيانات','It deletes the database'],['تغلق المتصفح','It closes the browser']]),
+ M('ماذا تطلب الواجهة الخلفية من طبقة البيانات عند البحث عن منتج؟','What does the backend request from the database when searching for a product?',2,[['صور المستخدم','User photos'],['كلمة المرور','Password'],['المنتجات المطابقة للبحث','Products matching the search'],['شاشة البحث','Search screen']]),
+ T('تطلب الواجهة الأمامية مباشرةً من قاعدة البيانات البحث عن المنتجات في النموذج المبسط.','The frontend asks the database directly to search for products in the simplified model.',0),
+ T('تعرض الواجهة الخلفية نتائج البحث مباشرةً على شاشة المستخدم.','The backend displays the search results directly on the user\'s screen.',0)],
+[M('ما دور الواجهة الخلفية في موقع تجارة إلكترونية؟','What is the role of the backend in an e-commerce site?',3,[['عرض صور المنتجات فقط','Displaying product images only'],['تخزين معلومات العملاء','Storing customer information'],['تصميم شاشة التسوق','Designing the cart screen'],['التحقق من المخزون وإرسال طلبات الدفع','Checking stock and sending payment requests']]),
+ M('ما وظيفة الواجهة الأمامية في شبكة التواصل الاجتماعي؟','What is the function of the frontend in a social network?',1,[['تخزين الرسائل','Storing messages'],['عرض الخط الزمني وشاشات النشر','Displaying the timeline and post screens'],['إدارة علاقات المتابعة','Managing follow relationships'],['حفظ بيانات المنشورات','Saving post data']]),
+ M('ما الذي يمكن أن تخزنه قاعدة بيانات شبكة التواصل الاجتماعي؟','What can a social network database store?',0,[['بيانات المنشورات وعلاقات المتابعة والرسائل','Post data, follow relationships and messages'],['شاشة النشر فقط','The post screen only'],['أزرار الموقع','Site buttons'],['إجراءات المستخدم فقط','User actions only']]),
+ M('ما البيانات التي يمكن أن تخزنها قاعدة بيانات متجر إلكتروني؟','What data can an online store database store?',1,[['أزرار الموقع','Site buttons'],['معلومات المنتجات وسجل الطلبات','Product information and order history'],['شاشة المتصفح','Browser screen'],['نموذج البحث فقط','The search form only']]),
+ T('النموذج المكون من ثلاث طبقات هو نموذج تعليمي مبسط، وقد تختلف البنية الفعلية من تطبيق ويب إلى آخر.','The three-tier model is a simplified teaching model, and the actual structure may differ from one web app to another.',1)]
+];
+var EX=[
+ T('الواجهة الخلفية هي الجزء الذي يعمل على الخادم ويعالج الطلبات.','The backend is the part that runs on the server and processes requests.',1),
+ T('قاعدة البيانات مسؤولة عن حفظ البيانات وتوفيرها عند الحاجة.','The database is responsible for saving data and providing it when needed.',1),
+ T('قاعدة البيانات هي الجزء الذي يتفاعل معه المستخدم مباشرةً في المتصفح.','The database is the part the user interacts with directly in the browser.',0),
+ T('يجب أن تكون البنية الفعلية لكل تطبيق ويب مطابقة تمامًا لنموذج الطبقات الثلاث.','The actual structure of every web app must exactly match the three-tier model.',0),
+ T('في تطبيق الطقس، يمكن للواجهة الأمامية وحدها البحث عن بيانات التوقعات وتخزينها دون الحاجة إلى أجزاء أخرى.','In a weather app, the frontend alone can search for and store forecast data without other parts.',0),
+ M('أين تعمل الواجهة الخلفية عادةً؟','Where does the backend usually run?',3,[['على الشاشة','On the screen'],['داخل لوحة المفاتيح','Inside the keyboard'],['داخل الطابعة','Inside the printer'],['على الخادم','On the server']]),
+ M('ما الفائدة الأساسية من فصل مسؤوليات تطبيق الويب إلى طبقات واضحة؟','What is the main benefit of separating web app responsibilities into clear tiers?',1,[['زيادة حجم الشاشة','Increasing the screen size'],['تنظيم العرض والمعالجة والبيانات','Organizing display, processing and data'],['إلغاء قاعدة البيانات','Removing the database'],['منع استخدام المتصفح','Preventing browser use']]),
+ M('في تطبيق الطقس، أي طبقة تستقبل اسم المدينة الذي يدخله المستخدم؟','In a weather app, which tier receives the city name entered by the user?',0,[['الواجهة الأمامية','Frontend'],['الواجهة الخلفية','Backend'],['قاعدة البيانات','Database'],['الخادم فقط','Server only']]),
+ TI('معالجة الدفع (موقع تجارة إلكترونية)','Payment processing (e-commerce site)',1),
+ TI('شاشة الخط الزمني (شبكة تواصل اجتماعي)','Timeline screen (SNS)',0),
+ TI('تخزين علاقات المتابعة (شبكة تواصل اجتماعي)','Storage of follow relationships (SNS)',2),
+ M('اختر الخيار الذي يصف أنسب بنية الطبقات الثلاث لتطبيق الويب.','Choose the option that best describes the three-tier architecture.',2,[['الواجهة الأمامية لها دور تخزين البيانات وإدارتها.','The frontend stores and manages data.'],['الواجهة الخلفية هي الجزء الذي يتفاعل معه المستخدمون مباشرة على المتصفح.','The backend is the part users interact with directly.'],['استجابةً لإجراءات المستخدم، تتعاون الواجهة الأمامية والخلفية وقاعدة البيانات لتنفيذ المعالجة.','In response to user actions, the frontend, backend and database cooperate to perform processing.'],['قاعدة البيانات لها دور عرض الشاشات للمستخدمين.','The database displays screens to users.']])
+];
+var ALL=[].concat.apply([],Q).concat(EX);
+/* add quiz buttons */
+$('#les').innerHTML=S.map(function(s,i){return '<section class="card"><h3>'+b(s.t)+'</h3>'+s.h+'<div class="center" style="margin-top:16px"><button class="btn big" onclick="runQ(Q['+i+'],'+i+')">٥ أسئلة على هذا الجزء | 5 Questions</button></div></section>'}).join('');
+/* quiz engine */
+var cur,idx,sc,wr,fin,ttl;
+function runQ(qs,t,f){cur=qs;idx=0;sc=0;wr=[];fin=!!f;ttl=t;$('#qz').style.display='block';show()}
+function closeQ(){$('#qz').style.display='none'}
+var L='أبجدهو';
+function show(){var q=cur[idx],pc=idx/cur.length*100;
+ $('#qb').innerHTML='<div class="center"><button class="btn xs" style="font-size:1rem;padding:8px 16px" onclick="closeQ()">✕ إغلاق | Close</button><span class="ar center" style="text-align:center">السؤال '+(idx+1)+' من '+cur.length+' | Question '+(idx+1)+' of '+cur.length+'</span></div><div class="bar"><div style="width:'+pc+'%"></div></div><div class="q" id="qq">'+b(q.a+'|'+q.e)+(q.o.length==2&&q.o[0][0]=='صح'?'':'')+'<div id="os">'+q.o.map(function(o,i){return '<button class="opt" data-i="'+i+'">'+(q.o.length>2?'<span class="ar">['+L[i]+'] '+o[0]+'</span>':'<span class="ar">'+o[0]+'</span>')+'<span class="en">'+o[1]+'</span></button>'}).join('')+'</div><div id="nx" class="center"></div></div>';
+ document.querySelectorAll('.opt').forEach(function(x){x.onclick=function(){pick(+x.dataset.i)}})}
+function pick(i){var q=cur[idx],bs=document.querySelectorAll('.opt'),ok=i==q.c,qq=$('#qq');
+ bs.forEach(function(x){x.disabled=true});bs[q.c].classList.add('ok');
+ if(ok){sc++;snd(1);conf();qq.classList.add('flashg')}else{bs[i].classList.add('no');wr.push(idx+1);snd(0);qq.classList.add('flash')}
+ $('#nx').innerHTML='<p class="ar center" style="text-align:center;color:'+(ok?'#2ee59d':'#ff5d73')+'">'+(ok?'✔ إجابة صحيحة! أحسنت | Correct! Well done!':'✘ إجابة خاطئة، الصحيحة باللون الأخضر | Wrong, the correct one is green')+'</p><button class="btn t" onclick="nxt()">'+(idx+1<cur.length?'التالي | Next':'عرض النتيجة | Results')+'</button>'}
+function nxt(){idx++;if(idx<cur.length)show();else done()}
+function done(){var p=Math.round(sc/cur.length*100),h='<div class="q center"><div class="score">'+sc+' / '+cur.length+'</div><span class="ar" style="text-align:center">'+(p>=80?'🏆 ممتاز يا '+name+'!':p>=50?'👍 جيد يا '+name+'، راجع الدرس مرة أخرى':'📚 راجع الدرس وحاول مرة أخرى يا '+name)+'</span><span class="en" style="text-align:center">'+p+'%</span>';
+ if(fin){var m='نتيجة اختبار منصة محترف\nالدرس 3-1: البنية العامة لتطبيقات الويب (الصف الثاني الثانوي)\nالطالب: '+name+'\nالدرجة: '+sc+' من '+cur.length+' ('+p+'%)\nأسئلة خاطئة: '+(wr.length?wr.join('، '):'لا يوجد')+'\nMOHTARF Lesson 3-1 Result: '+name+' - '+sc+'/'+cur.length;
+  h+='<p><a class="btn big" style="display:inline-block;text-decoration:none;background:#25d366;box-shadow:0 6px 0 #128c4a" target="_blank" rel="noopener" href="https://wa.me/201099920517?text='+encodeURIComponent(m)+'">إرسال النتيجة إلى واتساب | Send to WhatsApp</a></p>'}
+ h+='<p><button class="btn t" onclick="closeQ()">العودة للدرس | Back to lesson</button> <button class="btn" onclick="runQ(cur,ttl,fin)">إعادة | Retry</button></p></div>';
+ $('#qb').innerHTML=h;if(p>=50){conf();snd(1)}else snd(0)}
+var E=[
+["أسئلة مقالية ومفتوحة|Essay and Open Questions",[
+["اشرح كيف تتعاون الطبقات الثلاث لتطبيق الويب عندما ينشر المستخدم صورة على تطبيق تواصل اجتماعي. أشر إلى دور الواجهة الأمامية والخلفية وقاعدة البيانات. [6]|Explain how the three tiers of a web application cooperate when a user posts a photo on a social media app. Refer to the role of the frontend, backend, and database. [6]",
+"الواجهة الأمامية: تعرض شاشة النشر وتستقبل الصورة التي يختارها المستخدم وترسلها إلى الواجهة الخلفية. الواجهة الخلفية: تستقبل الطلب وتعالجه وتطبق قواعد التطبيق (مثل تحديد الجمهور المستهدف للمنشور والتحكم في الإشعارات) ثم ترسل بيانات المنشور إلى قاعدة البيانات. قاعدة البيانات: تخزن بيانات المنشور وتحفظها وتوفرها عند الحاجة. ثم تجهز الواجهة الخلفية النتيجة وترسلها إلى الواجهة الأمامية فتعرض المنشور على الشاشة.|Frontend: displays the post screen, receives the photo the user chooses and sends it to the backend. Backend: receives and processes the request and applies the app rules (such as determining the audience for the post and controlling notifications), then sends the post data to the database. Database: stores the post data and provides it when needed. The backend then prepares the result and sends it to the frontend, which displays the post on the screen."],
+["توقف وفكر: عندما تكتب في مربع البحث وترى النتائج، أي طبقة جمعت المدخلات، وأي طبقة وجدت الإجابة؟|Pause & Think: When you type in a search box and see results, which tier collected your input, and which tier found the answer?",
+"الواجهة الأمامية هي التي جمعت المدخلات (كلمات البحث). أما الإجابة فوجدتها قاعدة البيانات (طبقة البيانات) بطلب من الواجهة الخلفية، ثم عادت النتائج عبر الخلفية إلى الأمامية لتعرضها.|The frontend collected the input (the search keywords). The answer was found by the database, at the request of the backend, and the results returned through the backend to the frontend to be displayed."],
+["السؤال الرئيسي: كيف يُبنى تطبيق الويب، وكيف تعمل طبقاته الثلاث معًا للاستجابة لما يفعله المستخدم؟|Main question: How is a web application structured, and how do its three tiers work together to respond to what a user does?",
+"يُستخدم تطبيق الويب عادةً من خلال المتصفح ويُبنى من ثلاث طبقات: واجهة أمامية تعرض المحتوى وتستقبل مدخلات المستخدم، وواجهة خلفية تعالج الطلبات وتطبق قواعد التطبيق، وطبقة بيانات تحفظ البيانات وتوفرها. وعند إجراء المستخدم تجمع الأمامية المدخلات وتمررها للخلفية، فتطلب الخلفية البيانات من قاعدة البيانات، فتعيدها، ثم ترسل الخلفية النتيجة المنظمة إلى الأمامية لتعرضها.|A web application is usually used through a browser and is built from three tiers: a frontend that displays content and receives user input, a backend that processes requests and applies the app rules, and a database that stores and provides data. When a user acts, the frontend collects the input and passes it to the backend, the backend queries the database, the database returns the data, and the backend sends the organized result to the frontend to display."],
+["فكّر كمهندس (1) وزّع المهام: عيادة تريد تطبيق ويب يحجز فيه المرضى المواعيد ويتحققون من الأوقات المتاحة ويطلعون على زياراتهم السابقة. لثلاث ميزات (نموذج الحجز، التحقق من الأوقات المتاحة، تخزين الزيارات السابقة) حدد أي طبقة تتولى كلًا منها ولماذا.|Think as an Engineer (1) Assign the work: A clinic wants a web app where patients book appointments, check free time slots and see past visits. For the booking form, checking free slots and storing past visits, say which tier should handle each and why.",
+"نموذج الحجز: الواجهة الأمامية، لأنه الجزء الذي يراه المريض ويدخل فيه بياناته. التحقق من الأوقات المتاحة: الواجهة الخلفية، لأنها تعالج الطلب وتتخذ القرار. تخزين الزيارات السابقة: قاعدة البيانات، لأنها تحفظ البيانات وتوفرها عند الحاجة.|Booking form: frontend, because it is what the patient sees and enters data into. Checking free slots: backend, because it processes the request and makes decisions. Storing past visits: database, because it stores data and provides it when needed."],
+["فكّر كمهندس (2) شخّص العطل: تفتح صفحة الحجز لكن لا تظهر أوقات متاحة. ما الأجزاء التي قد تكون سبب المشكلة، وما المعلومة التي تحتاج إليها لتتأكد؟|Think as an Engineer (2) Diagnose a fault: The booking page opens but no free slots appear. Which tier is clearly working and which has probably failed? Explain.",
+"الواجهة الأمامية تعمل بوضوح لأن الصفحة فتحت بشكل طبيعي. والمشكلة غالبًا في الواجهة الخلفية (معالجة التحقق من الأوقات) أو في قاعدة البيانات التي تزودها بالبيانات. للتأكد نفحص هل استقبلت الخلفية الطلب، وهل أعادت قاعدة البيانات بيانات الأوقات.|The frontend is clearly working because the page opened normally. The problem is probably in the backend (the processing that checks the slots) or in the database that supplies it with data. To confirm, check whether the backend received the request and whether the database returned the slot data."],
+["فكّر كمهندس (3) قرّر: أوصِ بما إذا كان ينبغي للعيادة أن تنظم مسؤوليات العرض والمعالجة والبيانات في طبقات واضحة، وبرّر فائدة فصل المسؤوليات بسببين. وفي أزواج: اتفقوا على أين ينتمي التحقق من الأوقات المتاحة.|Think as an Engineer (3) Decide: Recommend whether the clinic should separate its app into three tiers and give two reasons. In pairs, agree on where checking free time slots belongs.",
+"نوصي بفصل التطبيق إلى ثلاث طبقات. السبب الأول: ينظم مسؤوليات العرض والمعالجة والبيانات في أجزاء واضحة. السبب الثاني: يسهل تحديد الجزء المسؤول عند حدوث عطل (مثل اختفاء الأوقات المتاحة). والتحقق من الأوقات المتاحة ينتمي إلى الواجهة الخلفية.|We recommend separating the app into three tiers. Reason 1: it organizes display, processing and data into clear parts. Reason 2: it makes it easier to find which part is responsible when a fault occurs (such as free slots not showing). Checking free time slots belongs to the backend."],
+["طبّق ما تعلمته (تطبيق الطقس): سمِّ أي طبقة تقوم بكل مهمة (أخذ اسم المدينة، البحث عن بيانات التوقعات، تخزين التوقعات السابقة) وحدد مهمة واحدة لا يمكن للواجهة الأمامية القيام بها وحدها.|Apply what you learned (weather app): Name which tier does each job (taking the city name, looking up the forecast data, storing past forecasts) and identify one job the frontend cannot do on its own.",
+"أخذ اسم المدينة: الواجهة الأمامية. البحث عن بيانات التوقعات: الواجهة الخلفية (بالبحث في مصدر البيانات). تخزين التوقعات السابقة: قاعدة البيانات. مهمة لا تستطيعها الأمامية وحدها: البحث عن بيانات التوقعات من مصدر البيانات.|Taking the city name: frontend. Looking up the forecast data: backend (searching the data source). Storing past forecasts: database. A job the frontend cannot do alone: searching for forecast data from the data source."],
+["تأمل: أي طبقة تعتقد أن فشلها يكون أكثر وضوحًا للمستخدم عندما يحدث خطأ ما، ولماذا؟|Reflect: Which tier do you think fails most noticeably to a user when something goes wrong, and why?",
+"(إجابة نموذجية مقترحة) الواجهة الأمامية، لأنها الجزء الذي يراه المستخدم ويتفاعل معه مباشرة، فأي خطأ فيها يظهر على الشاشة فورًا، بينما الواجهة الخلفية وقاعدة البيانات تعملان خلف الشاشة.|(Suggested model answer) The frontend, because it is the part the user sees and interacts with directly, so any fault shows on the screen immediately, while the backend and database work behind the screen."],
+["التحدي: اذكر خدمة واحدة عبر الإنترنت تستخدمها وصف ما تقوم به واجهتها الأمامية وواجهتها الخلفية وقاعدة بياناتها.|Challenge: Name one online service you use and describe what its frontend, backend and database each do.",
+"(إجابة نموذجية) موقع مشاركة الفيديو: الأمامية تعرض شاشات تشغيل الفيديو والبحث وتستقبل إجراءات المستخدم. الخلفية تختار الفيديوهات الموصى بها وتجمع عدد المشاهدات. قاعدة البيانات تخزن بيانات الفيديو ومعلومات المستخدمين وسجل المشاهدة.|(Model answer) Video sharing site: the frontend displays video playback and search screens and receives user operations. The backend selects recommended videos and aggregates view counts. The database stores video data, user information and viewing history."]
+]],
+["اذكر المصطلح العلمي|Name the Scientific Term",[
+["١– تطبيق يُستخدم عادة عبر متصفح الويب. ٢– مكوّن الشاشة الذي يراه المستخدمون ويتفاعلون معه مباشرة. ٣– الجزء الذي يعمل على الخادم ولا يراه المستخدمون. ٤– نظام ينظم البيانات ويخزنها ويديرها.|1. An application used through a web browser. 2. The screen component users see and interact with directly. 3. The server-side part users do not see. 4. A system that organizes, stores and manages data.",
+"١– تطبيق الويب. ٢– الواجهة الأمامية. ٣– الواجهة الخلفية. ٤– قاعدة البيانات.|1. Web application. 2. Frontend. 3. Backend. 4. Database."],
+["١– برنامج يُستخدم عادة عبر المتصفح وقد تتيح بعض تطبيقاته تثبيته. ٢– الجزء الذي يراه المستخدم ويعرض المحتوى ويستقبل مدخلاته. ٣– الجزء الذي يعمل على الخادم ويعالج الطلبات ويطبق قواعد التطبيق. ٤– الطبقة التي تحفظ البيانات وتوفرها. ٥– النموذج الذي يقسم التطبيق إلى واجهة أمامية وخلفية وقاعدة بيانات.|1. A program used through the browser, some of which can be installed. 2. The part the user sees that displays content and receives input. 3. The server part that processes requests and applies app rules. 4. The tier that stores data and provides it when needed. 5. The model that divides an app into frontend, backend and database.",
+"١– تطبيق الويب. ٢– الواجهة الأمامية. ٣– الواجهة الخلفية. ٤– طبقة البيانات (قاعدة البيانات). ٥– نموذج الطبقات الثلاث (بنية الطبقات الثلاث).|1. Web application. 2. Frontend. 3. Backend. 4. Data tier (database). 5. The three-tier model (three-tier architecture)."],
+["٦– الجزء المسؤول عن عرض شاشات البحث وصفحات المنتجات ونماذج الإدخال. ٧– الجزء المسؤول عن البحث عن المنتجات المطابقة والتحقق من تسجيل الدخول. ٨– البيانات التي قد تتضمن معلومات المنتجات والمستخدمين وسجل الطلبات. ٩– العملية التي تنتقل فيها كلمات البحث من الأمامية إلى الخلفية ثم تُسترجع النتائج وتُعرض. ١٠– تنظيم مسؤوليات العرض والمعالجة والبيانات في أجزاء منفصلة.|6. The part that displays search screens, product pages and input forms. 7. The part that searches for matching products and verifies login. 8. Data that may include product information, user information and order history. 9. The process in which search keywords move from frontend to backend, then results are retrieved and displayed. 10. Organizing display, processing and data responsibilities into separate parts.",
+"٦– الواجهة الأمامية. ٧– الواجهة الخلفية. ٨– بيانات قاعدة البيانات. ٩– تدفق تعاون الطبقات الثلاث. ١٠– فصل المسؤوليات.|6. Frontend. 7. Backend. 8. Database data. 9. The flow of three-tier cooperation. 10. Separation of responsibilities."]
+]],
+["أكمل الفراغات|Fill in the Blanks",[
+["اقرأ الفقرة ثم املأ الفراغات: تسمى الواجهة التي يراها المستخدم ويتعامل معها (1)، ويسمى الجزء الذي يعمل على الخادم ويعالج الطلبات (2)، وتسمى الطبقة التي تحفظ البيانات وتوفرها (3).|Read the passage and fill the blanks: The screen component users see directly is called the (a). The part responsible for server-side processing is called the (b). A system that organizes, stores and manages data is called the (c).",
+"(1) الواجهة الأمامية (2) الواجهة الخلفية (3) قاعدة البيانات.|(a) Frontend (b) Backend (c) Database."],
+["أكمل من بين القوسين (قاعدة البيانات – الخرائط – متصفح الويب – الواجهة الأمامية – الواجهة الخلفية): ١– تطبيق الويب برنامج يُستخدم عادة من خلال...... ٢– النموذج المبسط من الواجهة الأمامية والخلفية و...... ٣– الجزء الذي يراه المستخدم يسمى...... ٤– الجزء الذي يعالج الطلبات يسمى...... ٥– من أمثلة التطبيقات الفيديو والتسوق والبريد و......|Complete from the choices (Database – Maps – Web browser – Frontend – Backend): 1. A web application is a program usually used through...... 2. The simplified model has frontend, backend and...... 3. The part the user sees is called...... 4. The part that processes requests is called...... 5. Examples of web apps: video, shopping, email and......",
+"١– متصفح الويب. ٢– قاعدة البيانات. ٣– الواجهة الأمامية. ٤– الواجهة الخلفية. ٥– الخرائط.|1. Web browser. 2. Database. 3. Frontend. 4. Backend. 5. Maps."],
+["أكمل مكان النقط: ١– تتحقق الواجهة الخلفية من ...... وترسل طلبات الدفع. ٢– تخزن قاعدة البيانات معلومات المنتجات والمستخدمين و...... ٣– في تطبيق الطقس تستقبل الواجهة الأمامية ...... الذي يدخله المستخدم. ٤– الأمامية مسؤولة عن العرض و......، والخلفية عن المعالجة والتحكم. ٥– تنظم بنية الطبقات العرض والمعالجة و...... ٦– الطبقة التي تحفظ البيانات وتوفرها تسمى...... ٧– تعرض الأمامية المحتوى وتستقبل ما يكتبه المستخدم أو...... ٨– تطلب الخلفية المنتجات التي تطابق...... ٩– تعيد طبقة البيانات النتائج إلى...... ١٠– تجهز الخلفية النتائج لإرسالها إلى......|Complete: 1. The backend checks...... and sends payment requests. 2. The database stores product information, user information and...... 3. In a weather app the frontend receives the...... entered by the user. 4. The frontend handles display and......; the backend handles processing and control. 5. The three-tier structure organizes display, processing and...... 6. The tier that stores data is called...... 7. The frontend displays content and receives what the user types or...... 8. The backend requests products that match...... 9. The database returns results to the...... 10. The backend prepares results to send to the......",
+"١– المخزون. ٢– سجل الطلبات. ٣– اسم المدينة. ٤– التفاعل. ٥– البيانات. ٦– قاعدة البيانات. ٧– يختاره. ٨– عبارة البحث. ٩– الواجهة الخلفية. ١٠– الواجهة الأمامية.|1. Stock (inventory). 2. Order history. 3. City name. 4. Interaction. 5. Data. 6. Database. 7. Chooses. 8. The search phrase. 9. Backend. 10. Frontend."]
+]],
+["تصنيف الطبقات والمسائل المحلولة|Tier Classification and Worked Examples",[
+["أي طبقة مسؤولة عن البحث في البيانات عن المنتجات المطابقة لكلمات البحث: أ) الواجهة الأمامية ب) الخلفية ج) قاعدة البيانات؟|When searching for a product, which tier searches through data for products that match the keywords: A Frontend, B Backend, C Database?",
+"ب) الواجهة الخلفية.|B Backend."],
+["لكل مما يلي حدد طبقة موقع التجارة الإلكترونية (أ أمامية، ب خلفية، ج قاعدة بيانات): ١– صفحة عرض المنتجات ٢– معالجة التحقق من المخزون ٣– تخزين معلومات العملاء ٤– شاشة سلة التسوق ٥– معالجة الدفع ٦– تخزين سجل الطلبات|For each e-commerce item choose A Frontend, B Backend, C Database: a Product listing page, b Stock checking processing, c Storage of customer information, d Cart screen, e Payment processing, f Storage of order history",
+"١– أ ٢– ب ٣– ج ٤– أ ٥– ب ٦– ج|a A, b B, c C, d A, e B, f C"],
+["لكل مما يلي حدد طبقة شبكة التواصل الاجتماعي: ١– شاشة الخط الزمني ٢– معالجة تحديد الجمهور المستهدف للمنشور ٣– تخزين بيانات المنشورات ٤– شاشة النشر ٥– معالجة الإشعارات ٦– تخزين علاقات المتابعة|For each SNS item choose A Frontend, B Backend, C Database: a Timeline screen, b Processing that determines the audience for a post, c Storage of post data, d Post screen, e Notification processing, f Storage of follow relationships",
+"١– أ ٢– ب ٣– ج ٤– أ ٥– ب ٦– ج|a A, b B, c C, d A, e B, f C"],
+["مثال محلول 1: ضع علامة (✓) أو (×): [أ] الواجهة الأمامية هي مكوّن الشاشة الذي يراه المستخدمون مباشرة. [ب] الواجهة الخلفية هي الجزء الذي يعمل على المتصفح. [ج] قاعدة البيانات نظام ينظم البيانات ويخزنها ويديرها. [د] يعمل تطبيق الويب بالواجهة الأمامية وحدها.|Worked example 1: Mark ○ if true or × if false: A The frontend is the screen component users see directly. B The backend is the part that runs on the browser. C A database is a system that organizes, stores and manages data. D A web application operates with the frontend alone.",
+"[أ] ✓ [ب] × (الخلفية تعمل على الخادم) [ج] ✓ [د] × (يعمل بثلاث طبقات).|A ○ B × (the backend runs on the server) C ○ D × (it operates with three tiers)."],
+["مثال محلول 2: اربط كل وصف بالمصطلح الأنسب (أ الواجهة الأمامية، ب الخلفية، ج قاعدة البيانات): ١– الجزء المسؤول عن المعالجة من جانب الخادم ولا يراه المستخدمون. ٢– مكوّن الشاشة الذي يتفاعل معه المستخدمون. ٣– نظام ينظم البيانات ويخزنها ويديرها.|Worked example 2: Match each description with A Frontend, B Backend, C Database: a Server-side processing users do not see; b Screen component users interact with; c A system that organizes, stores and manages data.",
+"١– [ب] ٢– [أ] ٣– [ج]|a: B, b: A, c: C"],
+["اختر الخيار الذي يصف أنسب بنية الطبقات الثلاث (الخيار ج: استجابةً لإجراءات المستخدم تتعاون الواجهة الأمامية والخلفية وقاعدة البيانات)... لماذا الخيارات الأخرى خاطئة؟|Choose the option that best describes the three-tier architecture. Why are the other options wrong?",
+"الإجابة الصحيحة: تتعاون الطبقات الثلاث لتنفيذ المعالجة. الخطأ في الباقي: تخزين البيانات وظيفة قاعدة البيانات لا الأمامية؛ الخلفية تعمل على الخادم لا على المتصفح؛ عرض الشاشات وظيفة الأمامية لا قاعدة البيانات.|Correct: the three tiers cooperate to perform the processing. The others are wrong: storing data is the database's job, not the frontend's; the backend runs on the server, not the browser; displaying screens is the frontend's job, not the database's."]
+]]];
+function openE(){$('#es').style.display='block';snd(1)}
+function closeE(){$('#es').style.display='none'}
+E[3][1].pop();
+var PT={
+"0.0":["d","من الملفين: الواجهة الأمامية: عرض الخط الزمني وشاشات النشر، وإرسال المحتوى المُدخل (تعرض المحتوى وتستقبل ما يكتبه المستخدم أو يختاره). الواجهة الخلفية: تحديد الجمهور المستهدف للمنشورات، والتحكم في الإشعارات الفورية (تعالج الطلبات وتطبق قواعد التطبيق). قاعدة البيانات: تخزين بيانات المنشورات وعلاقات المتابعة والرسائل (تحفظ البيانات وتوفرها عند الحاجة). وتتعاون الطبقات الثلاث لتحويل إجراء المستخدم إلى نتيجة.|From the files: Frontend: display of timelines and post screens; sending of input content (it displays content and receives what the user writes or chooses). Backend: determining the audience for posts; control of push notifications (it processes requests and applies the app rules). Database: storage of post data, follow relationships, and messages (it stores data and provides it when needed). The three tiers cooperate to turn a user's action into a result."],
+"0.1":["d","الواجهة الأمامية استقبلت كلمات البحث التي أدخلها المستخدم (الخطوة ١). وطلبت الواجهة الخلفية من طبقة البيانات المنتجات المطابقة (الخطوة ٣)، فأعادت طبقة البيانات النتائج المطلوبة (الخطوة ٤). أي أن الإجابة وُجدت في طبقة البيانات.|The frontend received the search keywords entered by the user (step 1). The backend asked the database for products that match (step 3), and the database returned the data of matching products (step 4). So the answer was found in the database tier."],
+"0.2":["f","يُستخدم تطبيق الويب عادةً من خلال المتصفح، ويمكن شرح كثير من التطبيقات بنموذج مبسط من ثلاث طبقات: ① واجهة أمامية تعرض المحتوى وتستقبل مدخلات المستخدم، ② وواجهة خلفية تعالج الطلبات وتطبق قواعد التطبيق، ③ وطبقة بيانات تحفظ البيانات وتوفرها.|A web application runs in a browser and is built from three tiers. The frontend is the screen the user sees and interacts with; the backend is the hidden server-side processing that makes decisions; and the database organizes, stores, and manages the data. When a user acts, for example searching for a product, the frontend collects the input and passes it to the backend, the backend queries the database, the database returns the data, and the backend sends the organized result back to the frontend to display. Overall, a web application works not through one part but through three tiers cooperating, each with a clear role."],
+"0.3":["d","تلميح الملف: الواجهة الأمامية تعرض وتجمع، والخلفية تقرر وتعالج، وقاعدة البيانات تخزن وتسترجع. لذلك: نموذج الحجز ← الواجهة الأمامية. التحقق من الأوقات المتاحة ← الواجهة الخلفية. تخزين الزيارات السابقة ← قاعدة البيانات.|The files' hint: the frontend shows and collects; the backend decides and processes; the database stores and retrieves. So: booking form → frontend. Checking free time slots → backend. Storing past visits → database."],
+"0.4":["d","الصفحة فتحت بشكل طبيعي، أي أن الواجهة الأمامية (التي تعرض وتجمع) تعمل. أما الأوقات المتاحة فتحتاج إلى معالجة وقرار (الواجهة الخلفية) وإلى بيانات (قاعدة البيانات)، فالعطل غالبًا في الواجهة الخلفية أو في ما تسترجعه من قاعدة البيانات.|The page opened normally, so the frontend (which shows and collects) is working. Free slots need processing and decisions (the backend) and data (the database), so the fault is probably in the backend or in what it retrieves from the database."],
+"0.5":["d","نوصي بفصل التطبيق إلى ثلاث طبقات. السبب ١: تُستخدم بنية الطبقات الثلاث لتنظيم مسؤوليات العرض والمعالجة والبيانات في طبقات واضحة. السبب ٢: لكل طبقة دور واضح وتعمل الطبقات الثلاث معًا بدل جزء واحد. والتحقق من الأوقات المتاحة ينتمي إلى الواجهة الخلفية.|We recommend separating the app into three tiers. Reason 1: the three-tier structure organizes display, processing and data responsibilities into clear tiers. Reason 2: each tier has a clear role, and the three tiers cooperate instead of one part doing everything. Checking free time slots belongs to the backend."],
+"0.6":["d","أخذ اسم المدينة ← الواجهة الأمامية. البحث عن بيانات التوقعات ← الواجهة الخلفية. تخزين التوقعات السابقة ← قاعدة البيانات. المهمة التي لا تستطيعها الواجهة الأمامية وحدها: البحث عن بيانات التوقعات من مصدر البيانات.|Taking the city name → frontend. Looking up the forecast data → backend. Storing past forecasts → database. A job the frontend cannot do on its own: searching for forecast data from the data source."],
+"0.7":["o","سؤال رأي، ولا توجد له إجابة نموذجية في الملفين. من نص الملف: الأشياء التي تراها على الشاشة ليست كل ما يحدث، فالواجهة الأمامية هي الجزء الذي تراه وتتفاعل معه، وخلف الشاشة أجزاء تعمل معًا لتنفيذ ما تطلبه.|An opinion question with no model answer in the files. From the text: what you see on the screen is not everything that happens; the frontend is the part you see and interact with, and behind the screen different parts work together to carry out what you request."],
+"0.8":["d","مثال من جدول الملفين (موقع مشاركة الفيديو): الواجهة الأمامية: عرض شاشات تشغيل الفيديو والبحث، واستقبال إجراءات المستخدم. الواجهة الخلفية: اختيار الفيديوهات الموصى بها، وتجميع عدد المشاهدات. قاعدة البيانات: تخزين بيانات الفيديو ومعلومات المستخدمين وسجل المشاهدة.|Example from the files' table (video sharing site): Frontend: display of video playback and search screens; reception of user operations. Backend: selection of recommended videos; aggregation of view counts. Database: storage of video data, user information, and viewing history."],
+"3.3":["f","[أ] ✓ الواجهة الأمامية هي مكوّن الشاشة الذي يراه المستخدمون مباشرة. [ب] × الواجهة الخلفية تعمل على الخادم لا على المتصفح. [ج] ✓ تعريف صحيح لقاعدة البيانات. [د] × يعمل تطبيق الويب بثلاث طبقات: الواجهة الأمامية والخلفية وقاعدة البيانات.|A ○ The frontend is the screen component that users see directly. B × The backend is the part that runs on the server, not on the browser. C ○ Correct definition of a database. D × A web application operates with three tiers: frontend, backend, and database."],
+"3.4":["f","١– [ب] الواجهة الخلفية (المعالجة من جانب الخادم). ٢– [أ] الواجهة الأمامية (الشاشة التي يتفاعل معها المستخدمون). ٣– [ج] قاعدة البيانات (تخزين البيانات وإدارتها).|a: B Backend (server-side processing). b: A Frontend (the screen users interact with). c: C Database (storing and managing data)."]
+};
+for(var k in PT){var p=k.split('.');E[p[0]][1][p[1]][1]=PT[k][1];E[p[0]][1][p[1]][2]=PT[k][0]}
+function tg(x){var d=x.nextElementSibling;d.hidden=!d.hidden;if(!d.hidden)tone(660,0,.2)}
+function AB(g,i){var x=E[g][1][i],t=x[2]||'d',lb=t=='f'?'✔ من الملفين | From the files':t=='o'?'ℹ سؤال رأي | Opinion question':'✔ مستخلصة من نص الملفين | Derived from the files\' text';
+ return '<div class="center" style="margin:10px 0"><button class="btn t" style="font-size:1.25rem" onclick="tg(this)">الإجابة النموذجية | Model Answer</button><div class="ans" hidden><span class="ar" style="color:var(--grn)">'+lb.split(' | ')[0]+'</span><span class="en" style="color:var(--grn)">'+lb.split(' | ')[1]+'</span>'+b(x[1])+'</div></div>'}
+$('#eb').innerHTML=E.map(function(g,gi){return '<h2 class="gh">'+b(g[0])+'</h2>'+g[1].map(function(x,i){return '<div class="ed">'+b(x[0])+AB(gi,i)+'</div>'}).join('')}).join('');
+$('#es').querySelector('small').innerHTML='اضغط زر الإجابة النموذجية تحت السؤال | Press the Model Answer button under each question';
+document.querySelectorAll('#les .card').forEach(function(c){var t=c.textContent.trim(),n=t.indexOf('السؤال الرئيسي')==0?2:t.indexOf('توقف وفكر')==0?1:t.indexOf('سؤال على نمط الامتحان')==0?0:-1;if(n>=0)c.insertAdjacentHTML('beforeend',AB(0,n))});
+</script>
+</body>
+</html>
